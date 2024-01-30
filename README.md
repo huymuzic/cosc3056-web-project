@@ -26,7 +26,7 @@ cd cosc3056-studio-project-team-sg01-g02-cosc3056
 
 - ***Create a MYSQL database named `climatechange`***
 
-- ***Update the application.properties file with your database details:***
+- ***Update the `application.properties` file with your database details:***
 ```
 spring.datasource.url=jdbc:mysql://localhost:3306/climatechange
 spring.datasource.username=your_database_username
