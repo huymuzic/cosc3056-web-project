@@ -42,6 +42,8 @@ spring.jpa.show-sql=true
 mvn spring-boot:run
 ```
 
+4. **Go to: http://localhost:8080**
+
 
 ## Project Strucutre 
 
@@ -61,7 +63,7 @@ mvn spring-boot:run
 │   │   │   └── com
 │   │   │       └── studio
 │   │   │           └── climatechange
-│   │   │               ├── ClimateChangeApplication.java
+│   │   │               ├── ClimateChangeApplication.java                               - Main Application entrypoint for **Spring Boot**
 │   │   │               ├── Helper.java
 │   │   │               ├── JDBCConnection.java
 │   │   │               ├── controller
@@ -123,6 +125,14 @@ mvn spring-boot:run
 ```
 
 
+## Authors
+**Nguyen Doan Trung Truc (s3974820)**
+**Ho Tuan (s4019549)**
+**On Tuan Huy (s4028018)**
+**Lam Manh Tuan (s4037166)**
+**Le Duc Huy (s4040502)**
+
+## Copyright RMIT University (c) 2024 
 
 
 
