@@ -123,10 +123,6 @@ mvn spring-boot:run
 ```
 
 
-## License 
-
-This section provides users with Maven commands they can use to clean and build the project, run tests, package the application, and run the packaged JAR file. Adjust the commands based on your project's specific requirements.
-
 
 
 
