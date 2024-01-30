@@ -44,6 +44,8 @@ mvn spring-boot:run
 
 
 ## Project Strucutre 
+
+```bash
 ├── .devcontainer
 │   ├── Dockerfile
 │   └── devcontainer.json
@@ -118,6 +120,7 @@ mvn spring-boot:run
     ├── generated-test-sources
     ├── maven-status
     └── test-classes
+```
 
 
 ## License 
