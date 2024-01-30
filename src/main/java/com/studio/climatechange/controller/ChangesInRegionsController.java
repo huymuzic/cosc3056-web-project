@@ -394,8 +394,9 @@ public class ChangesInRegionsController {
         }
     }
 
-    public static String countTotalPage(String region, int[] startingYears, int period, double minAverageChange,
-            double maxAverageChange, long minPopulation, long maxPopulation, String regionName) {
+    private static String countTotalPage(String region, int[] startingYears, int period, double minAverageChange,
+            double maxAverageChange, long minPopulation, long maxPopulation,
+            String regionName, String sortType, String sortColumn) {
         String selectedRegion;
         String selectedId;
 
@@ -409,9 +410,27 @@ public class ChangesInRegionsController {
             selectedRegion = "state";
             selectedId = "state_id";
         }
+
         if ("Global".equals(region)) {
             selectedRegion = "global";
             selectedId = "global_id";
+        }
+
+        String parseSortColumn = "";
+        int intSortColumn = 0;
+        try {
+
+            if (sortColumn != null) {
+                intSortColumn = Integer.parseInt(sortColumn);
+                int inputSortColumn = intSortColumn + 1;
+
+                parseSortColumn = "Table" + sortColumn + ".avg" + inputSortColumn;
+                System.err.println("parsedSortColumn: " + parseSortColumn);
+            }
+        } catch (NumberFormatException e) {
+            // Handle the case where the input cannot be parsed to an integer
+            System.err.println("Error parsing sortColumn: " + e.getMessage());
+            // You may want to log the error, throw an exception, or take appropriate action
         }
 
         StringBuilder query = new StringBuilder("WITH ");
@@ -440,8 +459,13 @@ public class ChangesInRegionsController {
 
         query.delete(query.length() - 2, query.length());
 
+        query.append(", CountryData AS ( ");
         query.append("SELECT ")
-                .append("count(*) ");
+                .append("Table0.name ");
+
+        for (int i = 0; i < startingYears.length; i++) {
+            query.append(", Table").append(i).append(".avg").append(i + 1).append(" ");
+        }
 
         query.append("FROM Table0");
 
@@ -453,7 +477,8 @@ public class ChangesInRegionsController {
         query.append(" WHERE ");
 
         for (int i = 0; i < startingYears.length; i++) {
-            query.append("Table").append(i).append(".avg").append(i + 1).append(" >= 1 ").append(" AND ");
+            query.append("ABS(").append("Table").append(i).append(".avg").append(i + 1).append(")").append(" >= 1 ")
+                    .append(" And ");
 
             if ("Country".equals(region)) {
                 if (maxPopulation > 0) {
@@ -478,15 +503,72 @@ public class ChangesInRegionsController {
                     .append("-").append("Table0.avg1").append(")").append(" BETWEEN ").append(minAverageChange)
                     .append(" AND ").append(maxAverageChange);
         }
+
+        query.append(" AND Table0.name = '").append(regionName).append("'");
+
+        query.append(")");
+
+        query.append(" Select count(*) ");
+
+        
+
+        query.append(" FROM Table0");
+
+        for (int i = 1; i < startingYears.length; i++) {
+            query.append(" JOIN Table").append(i)
+                    .append(" ON Table0.name = Table").append(i).append(".name");
+        }
+
+        query.append(" WHERE ");
+
+        for (int i = 0; i < startingYears.length; i++) {
+            query.append("ABS(").append("Table").append(i).append(".avg").append(i + 1).append(")").append(" >= 1 ")
+                    .append(" And ");
+
+            if ("Country".equals(region)) {
+                if (maxPopulation > 0) {
+                    query.append("(Table").append(i).append(".Population IS NULL OR Table").append(i)
+                            .append(".Population BETWEEN ")
+                            .append(minPopulation).append(" AND ").append(maxPopulation).append(") ");
+                } else {
+                    query.append("COALESCE(Table").append(i).append(".Population, 0) >= 0 ");
+                }
+
+                if (i < startingYears.length - 1) {
+                    query.append("AND ");
+                }
+            }
+        }
+        if ("Country".equals(region)) {
+        } else {
+            query = new StringBuilder(query.substring(0, query.length() - 4));
+        }
+        for (int i = 1; i < startingYears.length; i++) {
+            query.append(" AND ").append("ABS(").append("Table").append(i).append(".avg").append(i + 1)
+                    .append("-").append("( Select ").append("avg").append(i + 1).append(" from CountryData ")
+                    .append(")")
+                    .append(")").append(" BETWEEN ").append(minAverageChange)
+                    .append(" AND ").append(maxAverageChange);
+        }
+
+        query.append(" AND Table0.name <> '").append(regionName).append("'");
+
+        if (parseSortColumn != null && !parseSortColumn.isEmpty() && sortType != null && !sortType.isEmpty()) {
+            query.append(" ORDER BY (").append(parseSortColumn).append(" - ").append(" (SELECT avg")
+                    .append(intSortColumn + 1).append(" FROM CountryData)").append(")")
+                    .append(" ").append(sortType);
+        }
+        
+        System.err.println(query.toString());
         return query.toString();
     }
 
     public int executeCount(String region, int[] startingYears, int period, double minAverageChange,
-            double maxAverageChange, long minPopulation, long maxPopulation, String regionName) {
+            double maxAverageChange, long minPopulation, long maxPopulation, String regionName, String sortColumn, String sortType) {
         int result = 0;
         try (java.sql.Connection connection = DriverManager.getConnection(jdbcUrl, username, password)) {
             String sqlQuery = countTotalPage(region, startingYears, period, minAverageChange, maxAverageChange,
-                    minPopulation, maxPopulation, regionName);
+                    minPopulation, maxPopulation, regionName, sortType, sortColumn);
 
             try (PreparedStatement preparedStatement = connection.prepareStatement(sqlQuery);
                     ResultSet resultSet = preparedStatement.executeQuery()) {
@@ -646,7 +728,7 @@ public class ChangesInRegionsController {
         if (regionName != null) {
             totalPageDouble = executeCount(region, parsedStartingYears,
                     parsedYearPeriod, parsedMinAverageChange,
-                    parsedMaxAverageChange, parsedMinPopulation, parsedMaxPopulation, regionName) / pageSize;
+                    parsedMaxAverageChange, parsedMinPopulation, parsedMaxPopulation, regionName, sortType, sortColumn) / pageSize;
         }
 
         String[] firstRow = new String[] {};
