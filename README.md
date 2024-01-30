@@ -43,7 +43,84 @@ mvn spring-boot:run
 ```
 
 
-## LICENCE 
+## Project Strucutre 
+├── .devcontainer
+│   ├── Dockerfile
+│   └── devcontainer.json
+├── .gitignore
+├── README.md
+├── data
+├── mvnw
+├── mvnw.cmd
+├── pom.xml
+├── src
+│   ├── main
+│   │   ├── java
+│   │   │   └── com
+│   │   │       └── studio
+│   │   │           └── climatechange
+│   │   │               ├── ClimateChangeApplication.java
+│   │   │               ├── Helper.java
+│   │   │               ├── JDBCConnection.java
+│   │   │               ├── controller
+│   │   │               │   ├── AboutController.java
+│   │   │               │   ├── ChangesInPeriodsController.java
+│   │   │               │   ├── ChangesInRegionsController.java
+│   │   │               │   ├── Level1SubtaskAController.java
+│   │   │               │   ├── Level2SubtaskBController.java
+│   │   │               │   ├── Level2subtaskAcontroller.java
+│   │   │               │   ├── SimilarPeriodsController.java
+│   │   │               │   └── SimilarRegionsController.java
+│   │   │               ├── dto
+│   │   │               ├── models
+│   │   │               │   ├── City.java
+│   │   │               │   ├── Country.java
+│   │   │               │   ├── Global.java
+│   │   │               │   ├── Persona.java
+│   │   │               │   ├── Population.java
+│   │   │               │   ├── State.java
+│   │   │               │   ├── Student.java
+│   │   │               │   └── Temperature.java
+│   │   │               ├── repository
+│   │   │               ├── services
+│   │   │               └── viewModel
+│   │   │                   ├── level2SubtaskA
+│   │   │                   ├── level2SubtaskB
+│   │   │                   ├── level3SubtaskA
+│   │   │                   ├── level3SubtaskB
+│   │   │                   └── level3SubtaskBPart2
+│   │   └── resources
+│   │       ├── application.properties
+│   │       ├── data
+│   │       ├── images
+│   │       ├── static
+│   │       │   ├── functions
+│   │       │   ├── images
+│   │       │   └── styles
+│   │       └── templates
+│   │           ├── LandingPage.html
+│   │           ├── Lv2-Subtask-B.html
+│   │           ├── about.html
+│   │           ├── changesInPeriods.html
+│   │           ├── changesInRegions.html
+│   │           ├── level2subtaskA.html
+│   │           ├── similarPeriods.html
+│   │           └── similarRegions.html
+│   └── test
+│       └── java
+│           └── com
+│               └── studio
+│                   └── climatechange
+│                       └── ClimateChangeApplicationTests.java
+└── target
+    ├── classes
+    ├── generated-sources
+    ├── generated-test-sources
+    ├── maven-status
+    └── test-classes
+
+
+## License 
 
 This section provides users with Maven commands they can use to clean and build the project, run tests, package the application, and run the packaged JAR file. Adjust the commands based on your project's specific requirements.
 
