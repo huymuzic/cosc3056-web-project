@@ -63,7 +63,7 @@ mvn spring-boot:run
 │   │   │   └── com
 │   │   │       └── studio
 │   │   │           └── climatechange
-│   │   │               ├── ClimateChangeApplication.java                       - Main Application entrypoint for **Spring Boot**
+│   │   │               ├── ClimateChangeApplication.java                - Main Application entrypoint for **Spring Boot**
 │   │   │               ├── Helper.java
 │   │   │               ├── JDBCConnection.java
 │   │   │               ├── controller
