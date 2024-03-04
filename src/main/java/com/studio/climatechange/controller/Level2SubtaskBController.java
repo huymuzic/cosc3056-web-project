@@ -148,21 +148,6 @@ public class Level2SubtaskBController {
             this.abs_min_temperature_change = abs_min_temperature_change;
         }
 
-        public String getName() {
-            return name;
-        }
-
-        public double getAbs_avg_temperature_change() {
-            return abs_avg_temperature_change;
-        }
-
-        public double getAbs_max_temperature_change() {
-            return abs_max_temperature_change;
-        }
-
-        public double getAbs_min_temperature_change() {
-            return abs_min_temperature_change;
-        }
     }
 
 }
